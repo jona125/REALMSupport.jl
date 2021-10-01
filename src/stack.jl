@@ -1,5 +1,3 @@
-using Images,PlotlyJS, Printf, ProgressMeter, FileIO
-
 print("Date: ")
 date=chomp(readline())
 #date="20190315"

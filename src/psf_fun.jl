@@ -1,4 +1,3 @@
-using Images, StaticArrays, Statistics, StatsBase
 THRESHOLD = 1.2
 
 

@@ -1,7 +1,3 @@
-import ImageMagick
-using Images, ImageView, ImageTransformations, StaticArrays, LinearAlgebra, FFTW
-using FileIO, Printf, Makie,Statistics,DSP
-
 function overtime(img)
 	img_result = zeros(size(img[:,:,1]))
 

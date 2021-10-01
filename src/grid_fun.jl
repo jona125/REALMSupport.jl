@@ -1,6 +1,3 @@
-using Images,Statistics,FileIO,Printf
-
-include("COM.jl")
 INITIAL_FLAG = 1 == 1
 
 

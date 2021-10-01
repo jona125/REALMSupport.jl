@@ -1,8 +1,3 @@
-using Images, StaticArrays, LinearAlgebra, Statistics
-using FileIO, ProgressMeter, Printf, ImageSegmentation
-#using Plots, ImageView
-include("img_save.jl")
-
 function BG_subtraction(exp,BG_filename,filename,Save)
 	img = load(@sprintf("%s.tif", BG_filename))
 	img1 = convert(Array{N0f16}, img)

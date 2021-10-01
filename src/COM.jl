@@ -1,5 +1,3 @@
-using Images,Plots, Statistics,FileIO,Printf
-  
 # find center of mass in 2D image
 function COM(img)
         x_pos = []

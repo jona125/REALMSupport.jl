@@ -1,5 +1,3 @@
-using Images, FileIO, ImageTransformations, ProgressMeter, Printf
-
 WHITE_BG = 0.05N0f16
 
 function transfertotif(img,filename,r = 0,l = 15)

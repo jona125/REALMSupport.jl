@@ -1,5 +1,3 @@
-using Images,StaticArrays, FileIO, Printf, ProgressMeter, Statistics
-
 cd("/home/jchang/image/result/")
 
 print("Date: ")

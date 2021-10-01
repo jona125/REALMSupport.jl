@@ -1,14 +1,3 @@
-using Images, StaticArrays, FileIO, ProgressMeter, Printf, Statistics
-
-files=readdir()
-filelist=filter(x->occursin("-t.tif",x),files)
-@show filelist
-
-print("Filename: ")
-file=chomp(readline())
-#file = "20210302_10_M35_3-65-t.tif"
-file=filter(x->occursin(@sprintf("%s",file),x),filelist)
-@show file
 
 filename=file[1][1:end-4]
 
@@ -16,7 +5,6 @@ img = load(@sprintf("%s.tif", filename))
 img = convert(Array{N0f16}, img)
 img_l = mean(img,dims = 2)
 
-@show (x,y,z) = size(img)
 
 function img_dist(img1,img2,shift)
 	x1 = size(img1)
@@ -46,4 +34,3 @@ img_re = zeros(x,y,z)
 end
 
 img_re = Gray.(convert.(Normed{UInt16,16},img_re))
-FileIO.save(File{format"TIFF"}(@sprintf("%s-align.tif", filename)), img_re)

@@ -2,6 +2,13 @@ module REALMSupport
 
 # Write your package code here.
 
+using Images,ImageSegmentation, ImageTransformations
+using ImageView, Plots, Makie, PlotlyJS
+import ImageMagick
+using Statistics, StaticArrays, LinearAlgebra, DSP, StatsBase, FFTW
+using FileIO, Printf, ProgressMeter
+
+
 
 include("COM.jl")
 include("filter.jl")
