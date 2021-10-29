@@ -62,45 +62,45 @@ function clearzero(data)
 end
 
 
-print("Date: ")
-date=chomp(readline())
-#date="20190315"
-
-cd(@sprintf("/mnt/jchang_005/jchang/%s/",date))
-files=readdir()
-filelist=filter(x->occursin(".imagine",x),files)
-@show filelist
-
-print("Filename: ")
-files=readdir()
-filename = chomp(readline())
-
-@printf("angle: ")
-A = chomp(readline())
-A = parse(Int,A)
-
-
-scene1 = Scene()
-scene2 = Scene()
-exp = load(@sprintf("%s_1.tif", filename))
-#img1 = exp[:,:,t]
-#img2 = convert(Array{N0f16}, img1)
-img3 = overtime(exp)
-idx = argmax(img3)
-#scene1 = Makie.plot(smoothing(img2[idx,:],0.05))
-line_c = exp[idx[1],idx[2],:]
-line_s = smoothing(line_c,0.9)
-band_speed = speed_cal(A,line_c)
-band_pos = clearzero(band_speed)
-
-scene = Makie.lines(band_pos)
-
-time_pos = zeros(length(band_pos[:,1]),2)
-for i in 1:length(band_pos[:,1])
-        img3 = exp[:,:,Int(floor((band_pos[i,1]+A)*100/A))]
-        img4 = convert(Array{N0f16}, img3)
-        time_c = argmax(img4)[2]
-        time_pos[i,2] = std(img4[:,time_c])
-	time_pos[i,1] = band_pos[i,1]
-end
-#time_pos = smoothing(time_pos,0.3)
+#print("Date: ")
+#date=chomp(readline())
+##date="20190315"
+#
+#cd(@sprintf("/mnt/jchang_005/jchang/%s/",date))
+#files=readdir()
+#filelist=filter(x->occursin(".imagine",x),files)
+#@show filelist
+#
+#print("Filename: ")
+#files=readdir()
+#filename = chomp(readline())
+#
+#@printf("angle: ")
+#A = chomp(readline())
+#A = parse(Int,A)
+#
+#
+#scene1 = Scene()
+#scene2 = Scene()
+#exp = load(@sprintf("%s_1.tif", filename))
+##img1 = exp[:,:,t]
+##img2 = convert(Array{N0f16}, img1)
+#img3 = overtime(exp)
+#idx = argmax(img3)
+##scene1 = Makie.plot(smoothing(img2[idx,:],0.05))
+#line_c = exp[idx[1],idx[2],:]
+#line_s = smoothing(line_c,0.9)
+#band_speed = speed_cal(A,line_c)
+#band_pos = clearzero(band_speed)
+#
+#scene = Makie.lines(band_pos)
+#
+#time_pos = zeros(length(band_pos[:,1]),2)
+#for i in 1:length(band_pos[:,1])
+#        img3 = exp[:,:,Int(floor((band_pos[i,1]+A)*100/A))]
+#        img4 = convert(Array{N0f16}, img3)
+#        time_c = argmax(img4)[2]
+#        time_pos[i,2] = std(img4[:,time_c])
+#	time_pos[i,1] = band_pos[i,1]
+#end
+##time_pos = smoothing(time_pos,0.3)
