@@ -1,4 +1,8 @@
+module gauss_fit
+
 using Optim
+
+export Gauss_line_fit
 
 function gaussclossure(X)
 	function gaussloss(params)
@@ -9,7 +13,7 @@ function gaussclossure(X)
 	return gaussloss
 end
 
-function gauss_fit(X)
+function Gauss_line_fit(X)
 	f = gaussclossure(X)
 	lower = [0, 0]
 	upper = [1, 100]
@@ -19,4 +23,4 @@ function gauss_fit(X)
 	result = optimize(f, params, LBFGS())
 	return Optim.minimizer(result)
 end
-
+end

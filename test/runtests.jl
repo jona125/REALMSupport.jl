@@ -1,4 +1,4 @@
-using REALMSupport
+using REALMSupport.grid_fun, REALMSupport.gauss_fit
 using Test
 
 @testset "Grid diameter identify" begin
@@ -52,13 +52,13 @@ end;
 
         # gaussian distribution fitting
         X = tgt_peak * [exp(-(t-input_length/2)^2/(2*tgt_sigma^2)) for t = 1:input_length]
-        params = gauss_fit(X)
+        params = Gauss_line_fit(X)
         @test abs(params[1] - tgt_peak) / tgt_peak < 1
         @test params[2] ≈ tgt_sigma atol = 0.5
 
         # gaussian distribution fitting with random added
         X_r = X + rand(input_length)*tgt_peak*0.01
-        params = gauss_fit(X_r)
+        params = Gauss_line_fit(X_r)
         @test abs(params[1] - tgt_peak) / tgt_peak < 1
         @test params[2] ≈ tgt_sigma atol = 0.5
 
@@ -66,14 +66,14 @@ end;
         tgt_sigma = 10
         # gaussian distribution fitting wide shape
         X = tgt_peak * [exp(-(t-input_length/2)^2/(2*tgt_sigma^2)) for t = 1:input_length]
-        params = gauss_fit(X)
+        params = Gauss_line_fit(X)
         @test abs(params[1] - tgt_peak) / tgt_peak < 1
         @test params[2] ≈ tgt_sigma atol = 0.5
 
 
         # wide gaussian distribution fitting with random added
         X_r = X + rand(input_length)*tgt_peak*0.01
-        params = gauss_fit(X_r)
+        params = Gauss_line_fit(X_r)
         @test abs(params[1] - tgt_peak) / tgt_peak < 1
         @test params[2] ≈ tgt_sigma atol = 0.5
 
@@ -81,27 +81,27 @@ end;
         tgt_sigma = 1
         # gaussian distribution fitting wide shape
         X = tgt_peak*[exp(-(t-input_length/2)^2/(2*tgt_sigma^2)) for t in 1:input_length]
-        params = gauss_fit(X)
+        params = Gauss_line_fit(X)
         @test abs(params[1] - tgt_peak) / tgt_peak < 1
         @test params[2] ≈ tgt_sigma atol = 0.5
 
         # wide gaussian distribution fitting with random added
         X_r = X + rand(input_length)*tgt_peak*0.01
-        params = gauss_fit(X_r)
+        params = Gauss_line_fit(X_r)
         @test abs(params[1] - tgt_peak) / tgt_peak < 1
         @test params[2] ≈ tgt_sigma atol = 0.5
 
         tgt_sigma = 15
         # gaussian distribution fitting over range
         X = tgt_peak*[exp(-(t-input_length/2)^2/(2*tgt_sigma^2)) for t in 1:input_length]
-        params = gauss_fit(X)
+        params = Gauss_line_fit(X)
         @test abs(params[1] - tgt_peak) / tgt_peak < 1
         @test params[2] ≈ tgt_sigma atol = 0.5
 
 
         # wide gaussian distribution fitting with random added
         X_r = X + rand(input_length)*tgt_peak*0.01
-        params = gauss_fit(X_r)
+        params = Gauss_line_fit(X_r)
         @test abs(params[1] - tgt_peak) / tgt_peak < 1
         @test params[2] ≈ tgt_sigma atol = 0.5
 
@@ -109,13 +109,13 @@ end;
         # delta function fitting
         X_d = zeros(1,input_length)
         X_d[Int(input_length/2)] = 1
-        params = gauss_fit(vec(X_d))
+        params = Gauss_line_fit(vec(X_d))
         @test params[1] ≈ 1 atol = 0.5
         @test params[2] ≈ 0 atol = 0.5
 
         # flat signal fitting
         X_f = ones(1,input_length)
-        params = gauss_fit(vec(X_f))
+        params = Gauss_line_fit(vec(X_f))
         @test params[1] ≈ 1 atol = 0.5
         @test params[2] > input_length
 end;
