@@ -4,6 +4,10 @@ This is a collection of supporting codes of REALM, mainly writen in Julia
 
 explanation for each julia code:
 
+grid_fun.jl: calculation gird image stript width and spacing.
+
+gauss_fit.jl: 1 dimensional gaussing fitting.
+
 
 cut_region.jl: crap from filtered REALM image for ROI.
 
