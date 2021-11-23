@@ -1,4 +1,4 @@
-module grid_fun
+module GridFun
 
 INITIAL_FLAG = 1 == 1
 

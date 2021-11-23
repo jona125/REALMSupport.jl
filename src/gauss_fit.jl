@@ -12,7 +12,7 @@ function gaussclossure(X)
 	return gaussloss
 end
 
-function Gauss_line_fit(X)
+function gauss_line_fit(X)
 	f = gaussclossure(X)
 	params = [1e-8,0.5]
 
