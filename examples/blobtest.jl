@@ -20,21 +20,13 @@ function blobtest(data)
 			
 		img_gray = convert(Array{Float64,2},Gray.(slice))
 		
-		blobs_log = blob_LoG(img_gray, [4,8,16,32], (1,2))
-		
+		beads = findlocalmaxima(ro)
+	        select = ro[beads] .> mean(ro) + 3*std(ro)
+	
 		GLMakie.plot!(scene,img_gray)
 		
-		# seperate BlobLoG data
-		amp = []
-		for blobs in blobs_log
-			push!(amp,blobs.amplitude)
-		end
-		
-		# filter useless blobs
-		select = amp.>mean(amp)+std(amp)
-		
-		@showprogress @sprintf("Fitting slice %s...", sl) for blobs in blobs_log[select]
-			coord = blobs.location
+	
+		@showprogress @sprintf("Fitting slice %s...", sl) for coord in beads[select]
 			if coord[1] < 6 || coord[2] < 6 || size(img,1)-coord[1] < 6 || size(img,2)-coord[2] < 6
 				continue
 			end
@@ -60,15 +52,6 @@ function blobtest(data)
 			push!(peak,(x_params[1]+y_params[1])/2)
 				
 	
-			r = blobs.σ
-			c_x = collect(range(-2*r,2*r,length=100))
-			c_y = [sqrt(r^2-t^2/4) for t in c_x]
-			append!(c_y , [-sqrt(r^2-t^2/4) for t in c_x])
-			append!(c_x,c_x)
-			c_x .+= coord[1]
-			c_y .+= coord[2]
-			GLMakie.scatter!(scene,c_x,c_y,markersize=1, color=:blue)
-			
 			e_x = collect(range(-a,a,length=100))
 			e_y = [b*sqrt(1-t^2/a^2) for t in e_x]
 			append!(e_y , [-b*sqrt(1-t^2/a^2) for t in e_x])
@@ -79,8 +62,8 @@ function blobtest(data)
 			GLMakie.scatter!(scene,e_y,e_x,markersize=1,color=:red)
 		end
 	end
-	end;
 	return x_width,y_width,p_axis,scene
+	end;
 end
 
 function supportfunc(x_width,y_width,p_axis)

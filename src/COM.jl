@@ -1,5 +1,7 @@
+export centerofmass, findmid
+
 # find center of mass in 2D image
-function COM(img)
+function centerofmass(img)
         x_pos = []
         y_pos = []
         for i in 1:size(img,3)

@@ -3,15 +3,15 @@ module REALMSupport
 using Images,ImageSegmentation, ImageTransformations, Optim
 using ImageView, Plots, Makie
 using Statistics, OffsetArrays
-using FileIO, Printf, ProgressMeter
+using FileIO, Printf, ProgressMeter, RegisterMismatch, Interpolations
 
 
+export grid_resolution, gauss_line_fit, img_save
+export centerofmass, findmid, translate, translate_optim
 include("grid_fun.jl")
 include("gauss_fit.jl")
-
-
-export grid_fun, gauss_fit
-
-export grid_resolution, Gauss_line_fit
+include("img_save.jl")
+include("COM.jl")
+include("translation.jl")
 
 end
