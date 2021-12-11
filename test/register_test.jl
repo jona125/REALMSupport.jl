@@ -8,10 +8,12 @@
 	mm[:,:,1] = translate(A,A,(5,5))
 	mm[:,:,2] = translate(A,B,(5,5))
 	mm[:,:,3] = translate(A,C,(5,5))
-	
+
 	move = [0 1 2;0 0 0]
-	matrix  = [1 1 1 1]
+	matrix  = Float64[1 1 1 1]
 	result = translate_optim(mm,matrix,move)
+
+	@test minimum(result) < 1e-3
 end
 
 

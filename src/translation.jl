@@ -2,16 +2,18 @@
 export translate, translate_optim
 
 function translationclossure(mm,movement)
-        function translation_loss(matrix)
+    function translation_loss(matrix)
 		c = reshape(matrix,2,2) * movement
 		c .+= (size(mm,1)+1)/2
-		loss = 0
-                for i in size(c,2)
-			loss += mm[c[1,i],c[2,i],i]
-		end
-		return loss
+		loss = zero(eltype(mm))
+        for i in size(c,2)
+            idx1, idx2 = c[1,i], c[2,i]
+            checkbounds(Bool, mm, idx1, idx2, i) || return typemax(loss)
+			loss += mm[idx1,idx2,i]
         end
-        return translation_loss
+		return loss
+    end
+    return translation_loss
 end
 
 function translate(fixed, moving, maxshift, thresh=nothing)
