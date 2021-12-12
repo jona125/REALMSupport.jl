@@ -1,3 +1,6 @@
+export img_save
+
+
 function img_save(img,path,filename)
 	cur_path = pwd()
 	img1 = Gray.(convert(Array{N0f16},img))

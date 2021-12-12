@@ -1,6 +1,5 @@
-function BG_subtraction(exp,BG_filename,filename,Save)
-	img = load(@sprintf("%s.tif", BG_filename))
-	img1 = convert(Array{N0f16}, img)
+function BG_subtraction(exp,BG_img,filename,Save)
+	img1 = convert(Array{N0f16}, BG_img)
 		
 	
 	(x,y,z) = size(img1)

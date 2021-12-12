@@ -1,7 +1,5 @@
-module gauss_fit
 
-using Optim, OffsetArrays
-export Gauss_line_fit
+export gauss_line_fit
 
 function gaussclossure(X)
 	function gaussloss(params)
@@ -20,5 +18,4 @@ function gauss_line_fit(X)
 	Optim.converged(result) || @warn "Optimization failed to converge"
 	return result
 	#return Optim.minimizer(result)
-end
 end

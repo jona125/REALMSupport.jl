@@ -1,8 +1,6 @@
-module GridFun
 
 INITIAL_FLAG = 1 == 1
 
-using Statistics
 export fwhm, grid_resolution, grid_slice
 
 function fwhm(data,b_mean,b_std)
@@ -88,6 +86,4 @@ function grid_slice(img)
 		pos_temp = 0
 	end
 	return width_temp,pos_temp, frame, stript_width, space_width
-end
-
 end
