@@ -8,7 +8,7 @@ function translationclossure(mm,movement)
 		loss = zero(eltype(mm))
         for i in size(c,2)
             idx1, idx2 = c[1,i], c[2,i]
-            checkbounds(Bool, mm, idx1, idx2, i) || return typemax(loss)
+            checkbounds(Bool, mm, idx1, idx2, i) || return typemax(eltype(loss))
 			loss += mm[idx1,idx2,i]
         end
 		return loss
