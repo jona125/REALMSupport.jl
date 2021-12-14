@@ -1,7 +1,6 @@
 module REALMSupport
 
 using Images,ImageSegmentation, ImageTransformations, Optim
-using ImageView, Plots, Makie
 using Statistics, OffsetArrays
 using FileIO, Printf, ProgressMeter, RegisterMismatch, Interpolations
 

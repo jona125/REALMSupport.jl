@@ -1,7 +1,8 @@
 using REALMSupport
 using Test, Optim, OffsetArrays, Statistics
 
-include("grid_test.jl")
-include("gauss_fit_test.jl")
-
-
+@testset "REALMSupport" begin
+    include("grid_test.jl")
+    include("gauss_fit_test.jl")
+    include("register_test.jl")
+end
