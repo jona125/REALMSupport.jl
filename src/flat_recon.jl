@@ -10,7 +10,7 @@ function flat_recon(img,filename,step=9,Save=True)
 	@showprogress "Image Reconstruction for Record %s..." for i in 1:z
 		for j in 1:Int(floor(x/step))
 			#for h in 0:step-1
-				img_re[1+(i-1)*step:i*step,:,j] = img_cut[(j-1)*step+1:j*step,:,i]
+			img_re[1+(i-1)*step:i*step,:,j] = img_cut[(j-1)*step+1:j*step,:,i]
 		end
 	end
 

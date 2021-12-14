@@ -11,7 +11,7 @@
 
 	move = [0 1 2;0 0 0]
 	matrix  = Float64[1 1 1 1]
-	result = translate_optim(mm,matrix,move)
+	result = translate_optim(mm,matrix,move; g_abstol=1e-14)
 
 	@test minimum(result) < 1e-3
 end
