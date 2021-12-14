@@ -1,17 +1,27 @@
 
 export translate, translate_optim
 
-function translationclossure(mm,movement)
-    function translation_loss(matrix)
-		c = reshape(matrix,2,2) * movement
-		c .+= (size(mm,1)+1)/2
-		loss = zero(eltype(mm))
-        for i in size(c,2)
-            idx1, idx2 = c[1,i], c[2,i]
-            checkbounds(Bool, mm, idx1, idx2, i) || return typemax(eltype(loss))
-			loss += mm[idx1,idx2,i]
+function checkoffsetbound(matrix, idx)
+    for i in size(idx,1)
+        if abs(idx[i]) < abs(bounds(matrix)[i][1])
+            return false
         end
-		return loss
+    end
+    return true
+end
+
+function translationclossure(mm::AbstractArray{T,N},movement) where {T,N}
+    function translation_loss(matrix)
+        dims = N-1
+        c = reshape(matrix,dims,dims) * movement
+        #c .+= (size(mm,1)+1)/2
+        loss = zero(eltype(mm))
+        for i in size(c,2)
+            idx = Vector{T}(c[:,i])
+            checkoffsetbound(mm,idx) || return typemax(eltype(loss))
+            loss += mm[idx...,i]
+        end
+        return loss
     end
     return translation_loss
 end
@@ -26,9 +36,12 @@ function translate(fixed, moving, maxshift, thresh=nothing)
 end
 
 
-function translate_optim(mm, initial_matrix, movement)
+function translate_optim(mm::AbstractArray{T,N}, initial_matrix, movement; kwargs...) where {T,N}
+    shift = Int((size(mm,1)-1)/2)
+    mm = OffsetArray(mm,-shift:shift,-shift:shift,1:size(mm,N))
 	itp_mm = interpolate(mm, BSpline(Quadratic(Free(OnGrid()))))
 	f = translationclossure(itp_mm,movement)
-	result = optimize(f, initial_matrix, LBFGS())
+    result = optimize(f, initial_matrix, LBFGS(), Optim.Options(; kwargs...))
+    Optim.converged(result) || @warn "Optimization failed to converge"
 	return result
 end
