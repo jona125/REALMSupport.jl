@@ -3,6 +3,7 @@ module REALMSupport
 using Images,ImageSegmentation, ImageTransformations, Optim
 using Statistics, OffsetArrays
 using FileIO, Printf, ProgressMeter, RegisterMismatch, Interpolations
+using RegisterMismatch.RegisterCore
 
 
 export grid_resolution, gauss_line_fit, img_save
