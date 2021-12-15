@@ -1,17 +1,15 @@
 
 export translate, translate_optim
 
-
-function translationclossure(mm::AbstractArray{T,N}, movement) where {T,N}
+function translationclossure(mm, movement)
     function translation_loss(matrix)
-        dims = N - 1
-        c = reshape(matrix, dims, dims) * movement
-        #c .+= (size(mm,1)+1)/2
+        c = reshape(matrix, 2, 2) * movement
+        c .+= (size(mm, 1) + 1) / 2
         loss = zero(eltype(mm))
-        for (i, j) in enumerate(axes(mm, N))
-            idx = c[:, i]
-            checkbounds(Bool, mm, idx..., j) || return typemax(eltype(loss))
-            loss += mm(idx..., j)
+        for i in size(c, 2)
+            idx1, idx2 = c[1, i], c[2, i]
+            checkbounds(Bool, mm, idx1, idx2, i) || return typemax(loss)
+            loss += mm[idx1, idx2, i]
         end
         return loss
     end
