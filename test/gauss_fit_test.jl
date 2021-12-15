@@ -17,33 +17,33 @@ end
 
 
     # gaussian distribution fitting
-	gauss_test(tgt_peak,tgt_sigma,input_length,0; g_abstol=1e-14)
+    gauss_test(tgt_peak,tgt_sigma,input_length,0; g_abstol=1e-14)
 
     # gaussian distribution fitting with random added
- 	gauss_test(tgt_peak,tgt_sigma,input_length,0.03)
+    gauss_test(tgt_peak,tgt_sigma,input_length,0.03)
 
     tgt_sigma = 10
     # gaussian distribution fitting wide shape
-  	gauss_test(tgt_peak,tgt_sigma,input_length,0; g_abstol=1e-14)
+    gauss_test(tgt_peak,tgt_sigma,input_length,0; g_abstol=1e-14)
 
     # wide gaussian distribution fitting with random added
-   	gauss_test(tgt_peak,tgt_sigma,input_length,0.03)
+    gauss_test(tgt_peak,tgt_sigma,input_length,0.03)
 
 
 	tgt_sigma = 1
 	# gaussian distribution fitting wide shape
-	gauss_test(tgt_peak,tgt_sigma,input_length,0; g_abstol=1e-14)
+    gauss_test(tgt_peak,tgt_sigma,input_length,0; g_abstol=1e-14)
 
 
     # wide gaussian distribution fitting with random added
-	gauss_test(tgt_peak,tgt_sigma,input_length,0.03)
+    gauss_test(tgt_peak,tgt_sigma,input_length,0.03)
 
     tgt_sigma = 20
     # gaussian distribution fitting over range
-	gauss_test(tgt_peak,tgt_sigma,input_length,0; g_abstol=1e-14)
+    gauss_test(tgt_peak,tgt_sigma,input_length,0; g_abstol=1e-14)
 
     # wide gaussian distribution fitting with random added
-	gauss_test(tgt_peak,tgt_sigma,input_length,0.03)
+    gauss_test(tgt_peak,tgt_sigma,input_length,0.03)
 
     # delta function fitting
     X_d = zeros(1,2*input_length+1)
