@@ -7,12 +7,12 @@ function BG_correct(img, filename, GRIN)
         b_mean[i] = mean(img[:, :, i])
     end
     base = maximum(b_mean)
-    
+  
     filtered = zeros(x, y, z)
     @showprogress @sprintf("Light sheet filtering of Record %s...", filename) for t =
         1:size(img, 3)
         img2 = img[:, :, t]
-        
+
         for i = 1:x
             for j = 1:y
                 filtered[i, j, t] = img2[i, j] - b_mean[t] + base
@@ -33,6 +33,7 @@ function BG_correct(img, filename, GRIN)
         
         @showprogress @sprintf("GRIN lens correction of Record %s...", filename) for t =
             1:size(img, 3)
+      
             img2 = img1[:, :, t]
             for i = 1:x
                 for j = 1:y
@@ -44,6 +45,5 @@ function BG_correct(img, filename, GRIN)
             end
         end
     end
-    
     img_save(filtered, "/home/jchang/image/result/", @sprintf("%s-b.tif", filename))
 end

@@ -21,6 +21,7 @@ function BG_subtraction(exp, BG_img, filename, Save)
     count = 0
     @showprogress @sprintf("Background filtering of Record %s...", filename) for t =
         1:size(exp, 3)
+
         img2 = img1[:, :, t]
 
         for i = 1:x
