@@ -5,7 +5,6 @@ function translationclossure(mm::AbstractArray{T,N}, movement) where {T,N}
     function translation_loss(matrix)
         dims = N - 1
         c = reshape(matrix, dims, dims) * movement
-        #c .+= (size(mm,1)+1)/2
         loss = zero(eltype(mm))
         for (i, j) in enumerate(axes(mm, N))
             idx = c[:, i]
