@@ -1,9 +1,8 @@
 
 export beads_segment
 
-function beads_segment(img,filename)
-    (x,y,z) = size(img)
-    filtered = zeros(x,y,z)
+function beads_segment(img::AbstractArray,threshold)
+    filtered = zeros(size(img))
     
     m = mean(img)
     s = std(img)
@@ -13,7 +12,7 @@ function beads_segment(img,filename)
     label = label_components(img)
     out = component_pixels(label)
     out_fil = filter(out) do item
-                length(item) >= 10 && length(item) <= 1000
+                length(item) >= threshold && length(item) <= 1000
               end
 
     @showprogress @sprintf("Filtering %s",filename) for vec in out_fil
@@ -25,8 +24,7 @@ function beads_segment(img,filename)
     replace!(filtered, NaN=>0)
     img3 = Gray.(convert(Array{N0f16},OffsetArrays.no_offset_view(filtered)))
     img4 = Gray.(convert.(Normed{UInt16,16},img3))
-
-    img_save(img4,"/home/jchang/image/result/",@sprintf("%s-fi.tif",filename))
+    return img4
 end
 
 function component_pixels(labels)

@@ -16,7 +16,7 @@ using REALMSupport.RegisterCore: CenterIndexedArray
     result = translate_optim(mm, matrix, move; g_abstol = 1e-14)
 
     @test minimum(result) < 1e-3
-    display(reshape(Optim.minimizer(result), 2, 2))
+    #display(reshape(Optim.minimizer(result), 2, 2))
 
     #3d translation test
     outer = reshape(1:9600, 24, 20, 20)
@@ -38,5 +38,5 @@ using REALMSupport.RegisterCore: CenterIndexedArray
     result = translate_optim(mm, matrix, move; g_abstol = 1e-14)
 
     @test minimum(result) < 1e-3
-    display(reshape(Optim.minimizer(result), 3, 3))
+    #display(reshape(Optim.minimizer(result), 3, 3))
 end

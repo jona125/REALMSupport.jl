@@ -5,4 +5,5 @@ using Test, Optim, OffsetArrays, Statistics
     include("grid_test.jl")
     include("gauss_fit_test.jl")
     include("register_test.jl")
+    include("segment_test.jl")
 end
