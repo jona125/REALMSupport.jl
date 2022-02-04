@@ -1,30 +1,25 @@
 
 export beads_segment
 
-function beads_segment(img::AbstractArray, threshold)
-    filtered = zeros(size(img))
+function beads_segment(img::AbstractArray, threshold::Int64, maxsize = 1000, n_std = 3)
+    filtered = zeros(eltype(img), axes(img))
 
     m = mean(img)
     s = std(img)
-    img[img.>m+3*s] .= 1
+    img[img.>m+n_std*s] .= 1
     img[img.!=1] .= 0
 
     label = label_components(img)
     out = component_pixels(label)
     out_fil = filter(out) do item
-        length(item) >= threshold && length(item) <= 1000
+        length(item) >= threshold && length(item) <= maxsize
     end
 
-    @showprogress @sprintf("Filtering %s", filename) for vec in out_fil
-        for coord in vec
-            filtered[coord] = img[coord]
-        end
+    for vec in out_fil
+        filtered[vec] = img[vec]
     end
 
-    replace!(filtered, NaN => 0)
-    img3 = Gray.(convert(Array{N0f16}, OffsetArrays.no_offset_view(filtered)))
-    img4 = Gray.(convert.(Normed{UInt16,16}, img3))
-    return img4
+    return filtered
 end
 
 function component_pixels(labels)
