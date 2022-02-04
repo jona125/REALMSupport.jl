@@ -2,7 +2,7 @@
 export beads_segment
 
 function beads_segment(img::AbstractArray, threshold)
-    filtered = zeros(size(img))
+    filtered = zeros(eltype(img), axes(img))
 
     m = mean(img)
     s = std(img)
