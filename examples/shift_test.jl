@@ -1,19 +1,20 @@
 using REALMSupport
 using REALMSupport.RegisterCore: CenterIndexedArray
-using Optim, Images, RegisterMismatch
+using Optim, Images, RegisterMismatch, FFTW
+FFTW.set_num_threads(16)
 
 filelist = readdir()
 filelist = filter(x -> occursin("-fi.tif", x), filelist)
-filelist = filter(x -> occursin("20220221_1um", x), filelist)
+filelist = filter(x -> occursin("20220317_1um", x), filelist)
 
-mm = CenterIndexedArray(zeros(201, 201, 201, size(filelist, 1)))
+mm = CenterIndexedArray(zeros(241, 241, 241, size(filelist, 1)))
 mm_r = []
-img_org = load("20220221_1um_x-0_1_1-fi.tif")
+img_org = load("20220317_1um_x-0_1_1-fi.tif")
 
 for (i, j) in enumerate(axes(mm, 4))
     img = load(filelist[i])
-    mm[:, :, :, j] = translate(img_org, img, (100, 100, 100))
-    push!(mm_r, register_translate(img_org, img, (100, 100, 100)))
+    mm[:, :, :, j] = translate(img_org, img, (120, 120, 120))
+    push!(mm_r, register_translate(img_org, img, (120, 120, 120)))
 end
 
 move = [
@@ -33,3 +34,4 @@ result = translate_optim(mm, matrix, move; g_abstol = 1e-14)
 mat = reshape(Optim.minimizer(result), 3, 3)
 display(mat)
 display((mat * move)')
+display(mm_r)
