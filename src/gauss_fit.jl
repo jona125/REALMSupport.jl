@@ -4,8 +4,7 @@ export gauss_line_fit
 function gaussclossure(X::AbstractVector)
     function gaussloss(params)
         b, a, σ = params[1], params[2], params[3]
-        x = a * [exp(-(t)^2 / (2 * σ^2)) for t in axes(X, 1)]
-        x .+= b
+        x = a * [exp(-(t)^2 / (2 * σ^2)) + b for t in axes(X, 1)]
         return sum(abs2, x - X)
     end
     return gaussloss
