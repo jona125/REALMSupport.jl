@@ -5,12 +5,13 @@ export beads_segment
 function beads_segment(img::AbstractArray, threshold::Int64, maxsize = 1000, n_std = 3)
     filtered = zeros(eltype(img), axes(img))
 
+    img_m = img
     m = mean(img)
     s = std(img)
-    img[img.>m+n_std*s] .= 1
-    img[img.!=1] .= 0
+    img_m[img_m.>m+n_std*s] .= 1
+    img_m[img_m.!=1] .= 0
 
-    label = label_components(img)
+    label = label_components(img_m)
     out = component_pixels(label)
     out_fil = filter(out) do item
         length(item) >= threshold && length(item) <= maxsize

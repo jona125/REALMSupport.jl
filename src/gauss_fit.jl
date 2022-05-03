@@ -17,7 +17,8 @@ function gauss_line_fit(X::AbstractVector; kwargs...)
     σ = sqrt(max(σ², oftype(σ², 1e-4)))  # σ >= 0.01 since we only have integer-scale resolution
     params = [sX / (σ * sqrt(2π)), σ]
 
-    result = optimize(f, params, Newton(), Optim.Options(; kwargs...); autodiff = :forward)
+    #result = optimize(f, params, Newton(), Optim.Options(; kwargs...); autodiff = :forward)
+    result = optimize(f, params, BFGS(), Optim.Options(; kwargs...))
     Optim.converged(result) || @warn "Optimization failed to converge"
     return result
     #return Optim.minimizer(result)
