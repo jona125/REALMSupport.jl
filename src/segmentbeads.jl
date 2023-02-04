@@ -1,5 +1,5 @@
 
-export beads_segment
+export beads_segment, component_pixels
 
 
 function beads_segment(img::AbstractArray, threshold::Int64, maxsize = 1000, n_std = 3)

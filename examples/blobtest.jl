@@ -1,5 +1,5 @@
-using Images, GLMakie, Statistics, ProgressMeter, Printf, Plots, FileIO
-include("gauss_fit.jl")
+using Images, GLMakie, Statistics, ProgressMeter, Printf, Plots, FileIO, REALMSupport
+#include("gauss_fit.jl")
 
 function blobtest(data)
     img = load(data)
