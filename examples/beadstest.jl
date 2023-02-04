@@ -15,6 +15,7 @@ function beadstest(img, filename)
     filtered = zeros(x, y, z)
 
     M = [
+
         0.000163234 4.73411e-5 0.860779
         0.0050956 0.637071 0.0214116
         0.684893 -0.00907678 0.00739394
@@ -34,6 +35,7 @@ function beadstest(img, filename)
     @show(size(beads[select]), mean(img_r) + 1 * std(img_r))
 
     @showprogress @sprintf("Filtering of Record %s...", filename) for coord in beads[select]
+
         checkbounds(Bool, img_r, coord[1] - 10, coord[2] - 10, coord[3] - 10) || continue
         checkbounds(Bool, img_r, coord[1] + 10, coord[2] + 10, coord[3] + 10) || continue
         img_window =
@@ -67,9 +69,11 @@ function beadstest(img, filename)
         #push!(peak,(x_params[1]+y_params[1])/2)
         @show(x_params[2], y_params[2], z_params[2], coord)
 
+
         x_ = Int(ceil(x_params[2]))
         y_ = Int(ceil(y_params[2]))
         z_ = Int(ceil(z_params[2]))
+
 
         checkbounds(Bool, img_r, coord[1] - x_, coord[2] - y_, coord[3] - z_) || continue
         checkbounds(Bool, img_r, coord[1] + x_, coord[2] + y_, coord[3] + z_) || continue
@@ -111,6 +115,7 @@ function supportfunc(x_width, y_width, p_axis, img)
             xy_[i] = mean(y_box[i])
         end
     end
+
 
     #scene_xy = Scene()
     #GLMakie.scatter!(scene_xy,x_,y_)

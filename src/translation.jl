@@ -1,7 +1,7 @@
 
 export translate, translate_optim
 
-function translationclossure(mm::AbstractArray{T,N}, movement) where {T,N}
+function translationclosure(mm::AbstractArray{T,N}, movement) where {T,N}
     function translation_loss(matrix)
         dims = N - 1
         c = reshape(matrix, dims, dims) * movement
@@ -33,8 +33,11 @@ function translate_optim(
     movement;
     kwargs...,
 ) where {T,N}
-    itp_mm = interpolate(mm, BSpline(Quadratic(Free(OnCell()))))
-    f = translationclossure(itp_mm, movement)
+    # The final dimension of mm is assumed to represent "image number" and is not a continuous variable.
+    # Hence we should not interpolate over it.
+    qfc = BSpline(Quadratic(Free(OnCell())))
+    itp_mm = interpolate(mm, (ntuple(i->qfc, N-1)..., NoInterp()))
+    f = translationclosure(itp_mm, movement)
     result = optimize(f, initial_matrix, LBFGS(), Optim.Options(; kwargs...))
     Optim.converged(result) || @warn "Optimization failed to converge"
     return result
