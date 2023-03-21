@@ -1,5 +1,5 @@
 using Images, ImageSegmentation, Statistics, ProgressMeter, Printf, FileIO
-using CoordinateTransformations, Rotations, OffsetArrays, Optim, FFTW
+using CoordinateTransformations, Rotations, OffsetArrays, Optim, FFTW, Plots
 using REALMSupport
 kernel = Kernel.gaussian((5, 5, 5))
 FFTW.set_num_threads(16)
@@ -15,15 +15,15 @@ function beadstest(img, filename)
     filtered = zeros(x, y, z)
 
     M = [
-        -0.140292 -0.0912973 1.13447
-        -0.0273906 -0.940779 -0.0213417
-        -1.00816 0.0545783 0.161258
+
+        0.000163234 4.73411e-5 0.860779
+        0.0050956 0.637071 0.0214116
+        0.684893 -0.00907678 0.00739394
     ]
     v = [0.0, 0.0, 0.0]
-    rot = AffineMap(M, v)
-    #tilt = LinearMap(RotY(-0.19))
+
+    rot = AffineMap(M * [1 0 0; 0 1 0; 0 0 1], v)
     img_r = warp(img, rot)
-    #img_r = warp(img,tilt)
     filtered = warp(filtered, rot)
 
     #ro = imfilter(img_r,kernel)
@@ -35,14 +35,15 @@ function beadstest(img, filename)
     @show(size(beads[select]), mean(img_r) + 1 * std(img_r))
 
     @showprogress @sprintf("Filtering of Record %s...", filename) for coord in beads[select]
-        checkbounds(Bool, img_r, coord[1] - 10, coord[2] - 30, coord[3] - 10) || continue
-        checkbounds(Bool, img_r, coord[1] + 10, coord[2] + 30, coord[3] + 10) || continue
+
+        checkbounds(Bool, img_r, coord[1] - 10, coord[2] - 10, coord[3] - 10) || continue
+        checkbounds(Bool, img_r, coord[1] + 10, coord[2] + 10, coord[3] + 10) || continue
         img_window =
-            img_r[coord[1]-10:coord[1]+10, coord[2]-30:coord[2]+30, coord[3]-10:coord[3]+10]
+            img_r[coord[1]-10:coord[1]+10, coord[2]-10:coord[2]+10, coord[3]-10:coord[3]+10]
         img_x = OffsetArray(vec(mean(mean(img_window, dims = 3), dims = 2)), -10:10)
         x_res = gauss_line_fit(img_x; g_abstol = 1e-14)
 
-        img_y = OffsetArray(vec(mean(mean(img_window, dims = 3), dims = 1)), -30:30)
+        img_y = OffsetArray(vec(mean(mean(img_window, dims = 3), dims = 1)), -10:10)
         y_res = gauss_line_fit(img_y; g_abstol = 1e-14)
 
         img_z = OffsetArray(vec(mean(mean(img_window, dims = 2), dims = 1)), -10:10)
@@ -55,7 +56,7 @@ function beadstest(img, filename)
         a = x_params[2]
         b = y_params[2]
         c = z_params[2]
-        if a > 50 || b > 50 || c > 50 || a < 0 || b < 0 || c < 0
+        if a < 0 || b < 0 || c < 0 || a > 50 || b > 50 || c > 50
             continue
         end
         #if (x_params[1]+y_params[1]+z_params[1])/3 < mean(img_r) + 3*std(img_r)
@@ -68,9 +69,11 @@ function beadstest(img, filename)
         #push!(peak,(x_params[1]+y_params[1])/2)
         @show(x_params[2], y_params[2], z_params[2], coord)
 
-        x_ = Int(floor(x_params[2]))
-        y_ = Int(floor(y_params[2]))
-        z_ = Int(floor(z_params[2]))
+
+        x_ = Int(ceil(x_params[2]))
+        y_ = Int(ceil(y_params[2]))
+        z_ = Int(ceil(z_params[2]))
+
 
         checkbounds(Bool, img_r, coord[1] - x_, coord[2] - y_, coord[3] - z_) || continue
         checkbounds(Bool, img_r, coord[1] + x_, coord[2] + y_, coord[3] + z_) || continue
@@ -113,7 +116,8 @@ function supportfunc(x_width, y_width, p_axis, img)
         end
     end
 
-    scene_xy = Scene()
+
+    #scene_xy = Scene()
     #GLMakie.scatter!(scene_xy,x_,y_)
     scene_xy = Plots.plot(x_, y_, seriestype = :scatter)
     scene_box = Plots.plot(1:boxrange, xy_)
