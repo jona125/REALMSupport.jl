@@ -1,5 +1,5 @@
 import Pkg
-Pkg.activate("/storage1/fs1/holy/Active/jchang/.julia/dev/REALMSupport")
+Pkg.activate(".")
 
 
 using Images, StaticArrays, LinearAlgebra, Statistics, JLD2
@@ -8,7 +8,7 @@ using REALMSupport
 include("beadstest.jl")
 include("pipeline2_3d_trans.jl")
 
-cd(ARGS[1]) # Plugin PSF directory
+cd(ARGS[1]) # Plugin source data directory
 
 files = readdir()
 filelist = filter(x -> occursin(".imagine", x), files)

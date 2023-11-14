@@ -16,9 +16,10 @@ function beadstest(img, filename, path)
     filtered = zeros(axes(img_r))
     replace!(img_r, NaN => 0)
 
+    # Find local maxima for beads
     beads = findlocalmaxima(img_r)
-    select = img_r[beads] .> mean(img_r) + std(img_r)
-    @show(size(beads[select]), mean(img_r) + std(img_r))
+    select = img_r[beads] .> mean(img_r) + 5 * std(img_r)
+    @show(size(beads[select]), mean(img_r) + 5 * std(img_r))
 
 
     # Run through all identified local maximum point
