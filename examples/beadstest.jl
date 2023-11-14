@@ -11,28 +11,30 @@ function beadstest(img, filename, path)
 
     (x, y, z) = size(img)
 
-    img_r = pipeline2(img; z_set = 2)
+    # Process image to 3d translate real world x-y-z
+    img_r = pipeline2(img; z_set = 1)
     filtered = zeros(axes(img_r))
-
-    #ro = imfilter(img_r,kernel)
-
     replace!(img_r, NaN => 0)
 
     beads = findlocalmaxima(img_r)
     select = img_r[beads] .> mean(img_r) + std(img_r)
     @show(size(beads[select]), mean(img_r) + std(img_r))
 
+
+    # Run through all identified local maximum point
     @showprogress @sprintf("Filtering of Record %s...", filename) for coord in beads[select]
         checkbounds(Bool, img_r, coord[1] - 10, coord[2] - 10, coord[3] - 2) || continue
         checkbounds(Bool, img_r, coord[1] + 10, coord[2] + 10, coord[3] + 2) || continue
         img_window =
             img_r[coord[1]-10:coord[1]+10, coord[2]-10:coord[2]+10, coord[3]-2:coord[3]+2]
-        # filter out noise spots that is small group of signals
+        # Filter out noise spots that is small group of signals
         img_m = img_window
         img_m[img_m.>mean(img_r)+std(img_r)] .= 1
         img_m[img_m.!=1] .= 0
         label = label_components(img_m)
         out = component_pixels(label)
+
+        # Gaussian fitting in three axis
         img_x = OffsetArray(vec(mean(mean(img_window, dims = 3), dims = 2)), -10:10)
         x_res = gauss_line_fit(img_x; g_abstol = 1e-14)
 
@@ -46,24 +48,20 @@ function beadstest(img, filename, path)
         y_params = Optim.minimizer(y_res)
         z_params = Optim.minimizer(z_res)
 
+
+        # Check unrelated fitting results
         a = x_params[2]
         b = y_params[2]
         c = z_params[2]
         if a > 20 || b > 20 || c > 4 || a <= 0.01 || b <= 0.01 || c <= 0.01
             continue
         end
-        #if b > a
-        #    continue
-        #end
-        #if (x_params[1]+y_params[1]+z_params[1])/3 < mean(img_r) + 3*std(img_r)
-        #	continue
-        #end
+
         push!(x_width, a)
         push!(y_width, b)
         push!(z_width, c)
-        #push!(peak,(x_params[1]+y_params[1])/2)
-        #@show(x_params[2],y_params[2],z_params[2],coord)
 
+        # Update filtered image with beads contained and filter out extra pixels
         x_ = Int(floor(x_params[2]))
         y_ = Int(floor(y_params[2]))
         z_ = Int(floor(z_params[2]))
@@ -78,6 +76,8 @@ function beadstest(img, filename, path)
         ] = img_r[coord[1]-x_:coord[1]+x_, coord[2]-y_:coord[2]+y_, coord[3]-z_:coord[3]+z_]
 
     end
+
+    # Saved image and return psf info
     replace!(filtered, NaN => 0)
     filtered .-= minimum(filtered)
     filtered = normal(filtered)
@@ -85,7 +85,6 @@ function beadstest(img, filename, path)
     img4 = Gray.(convert.(Normed{UInt16,16}, img3))
 
     img_save(img4, path, @sprintf("%s-fi.tif", filename))
-    #@show(mean(x_width),mean(y_width),mean(z_width))
     return x_width, y_width, z_width
 end
 

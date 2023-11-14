@@ -8,7 +8,7 @@ using REALMSupport
 include("beadstest.jl")
 include("pipeline2_3d_trans.jl")
 
-cd(ARGS[1])
+cd(ARGS[1]) # Plugin PSF directory
 
 files = readdir()
 filelist = filter(x -> occursin(".imagine", x), files)
@@ -29,7 +29,7 @@ for k = 1:size(filelist, 1)
         img .-= minimum(img)
         img = normal(img)
         img = convert(Array{N0f16}, img)
-        x, y, z = beadstest(img, @sprintf("%s_%d", filelist[k][1:end-8], i), pwd())
+        x, y, z = beadstest(img, @sprintf("%s_%d", filelist[k][1:end-8], i), pwd()) # Using beadtest function from beadtest.jl
         push!(x_, x)
         push!(y_, y)
         push!(z_, z)
