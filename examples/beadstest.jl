@@ -1,7 +1,6 @@
-using Images, ImageSegmentation, Statistics, ProgressMeter, Printf, FileIO
+using Images, ImageSegmentation, ProgressMeter, Printf, FileIO
 using CoordinateTransformations, Rotations, OffsetArrays, Optim, FFTW
 using REALMSupport
-kernel = Kernel.gaussian((5, 5, 5))
 FFTW.set_num_threads(4)
 
 function beadstest(img, filename, path)
@@ -18,7 +17,7 @@ function beadstest(img, filename, path)
 
     # Find local maxima for beads
     beads = findlocalmaxima(img_r)
-    select = img_r[beads] .> mean(img_r) + 5 * std(img_r)
+    select = img_r[beads] .> mean(img_r) + 10 * std(img_r)
     @show(size(beads[select]), mean(img_r) + 5 * std(img_r))
 
 
@@ -28,12 +27,6 @@ function beadstest(img, filename, path)
         checkbounds(Bool, img_r, coord[1] + 10, coord[2] + 10, coord[3] + 2) || continue
         img_window =
             img_r[coord[1]-10:coord[1]+10, coord[2]-10:coord[2]+10, coord[3]-2:coord[3]+2]
-        # Filter out noise spots that is small group of signals
-        img_m = img_window
-        img_m[img_m.>mean(img_r)+std(img_r)] .= 1
-        img_m[img_m.!=1] .= 0
-        label = label_components(img_m)
-        out = component_pixels(label)
 
         # Gaussian fitting in three axis
         img_x = OffsetArray(vec(mean(mean(img_window, dims = 3), dims = 2)), -10:10)
@@ -82,10 +75,10 @@ function beadstest(img, filename, path)
     replace!(filtered, NaN => 0)
     filtered .-= minimum(filtered)
     filtered = normal(filtered)
-    img3 = Gray.(convert(Array{N0f16}, OffsetArrays.no_offset_view(filtered)))
-    img4 = Gray.(convert.(Normed{UInt16,16}, img3))
+    filtered = Gray.(convert(Array{N0f16}, OffsetArrays.no_offset_view(filtered)))
+    filtered = Gray.(convert.(Normed{UInt16,16}, filtered))
 
-    img_save(img4, path, @sprintf("%s-fi.tif", filename))
+    img_save(filtered, path, @sprintf("%s-fi.tif", filename))
     return x_width, y_width, z_width
 end
 

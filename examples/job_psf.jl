@@ -2,7 +2,7 @@ import Pkg
 Pkg.activate(".")
 
 
-using Images, StaticArrays, LinearAlgebra, Statistics, JLD2
+using Images, StaticArrays, LinearAlgebra, JLD2
 using FileIO, ProgressMeter, ImageSegmentation
 using REALMSupport
 include("beadstest.jl")
