@@ -27,6 +27,13 @@ function pipeline2(img; z_set = 1, x_angle = 0.0, y_angle = 0.0, z_angle = 0.0)
             -1.79544 -0.0268617 0.0203941
         ]
         rot = AffineMap(M * tr, v)
+    elseif z_set == 2
+        M = [
+            0.000163234 4.73411e-5 0.860779
+            0.0050956 0.637071 0.0214116
+            0.684893 -0.00907678 0.00739394
+        ]
+        rot = AffineMap(M * tr, v)
     else
         M = [
             -9.63642e-7 -0.000522643 0.831357
