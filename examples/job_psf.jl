@@ -28,11 +28,11 @@ for k in 1:size(filelist,1)
         end
         img .-= minimum(img)
         img = normal(img)
-        img = convert(Array{N0f16},img)
-        x,y,z = beadstest(img,@sprintf("%s_%d",filelist[k][1:end-8],i),pwd())
-        push!(x_,x)
-        push!(y_,y)
-        push!(z_,z)
+        img = convert(Array{N0f16}, img)
+        x, y, z = beadstest(img, @sprintf("%s_%d", filelist[k][1:end-8], i), pwd(),true) # Using beadtest function from beadtest.jl
+        push!(x_, x)
+        push!(y_, y)
+        push!(z_, z)
         img = nothing
     end
     jldsave(@sprintf("%s_psf.jld2",filelist[k][1:end-8]);x_,y_,z_)

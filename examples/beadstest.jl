@@ -4,42 +4,50 @@ using REALMSupport
 kernel = Kernel.gaussian((5,5,5))
 FFTW.set_num_threads(4)
 
-function beadstest(img,filename,path)
-	x_width = []
-	y_width = []
+function beadstest(img, filename, path,ow)
+    x_width = []
+    y_width = []
     z_width = []
-	
-	(x,y,z) = size(img)
- 
-    img_r = pipeline2(img;z_set=2)
+
+    (x, y, z) = size(img)
+
+    # Process image to 3d translate real world x-y-z
+    img_r = pipeline2(img; z_set = 2)
     filtered = zeros(axes(img_r))
     
     #ro = imfilter(img_r,kernel)
     
     replace!(img_r, NaN=>0)
 
-	beads = findlocalmaxima(img_r)
-	select = img_r[beads] .> mean(img_r) + std(img_r)
-    @show(size(beads[select]), mean(img_r)+ std(img_r))
-			
-    @showprogress @sprintf("Filtering of Record %s...",filename) for coord in beads[select]
-        checkbounds(Bool,img_r,coord[1]-10,coord[2]-10,coord[3]-2) || continue
-        checkbounds(Bool,img_r,coord[1]+10,coord[2]+10,coord[3]+2) || continue
-        img_window = img_r[coord[1]-10:coord[1]+10,coord[2]-10:coord[2]+10,coord[3]-2:coord[3]+2]
-        # filter out noise spots that is small group of signals
-        img_m = img_window
-        img_m[img_m.>mean(img_r)+std(img_r)] .= 1
-        img_m[img_m.!=1] .= 0
-        label = label_components(img_m)
-        out = component_pixels(label)
-   		img_x = OffsetArray(vec(mean(mean(img_window,dims=3),dims=2)),-10:10)
-		x_res = gauss_line_fit(img_x;g_abstol = 1e-14)
-	
-		img_y = OffsetArray(vec(mean(mean(img_window,dims=3),dims=1)),-10:10)
-	    y_res = gauss_line_fit(img_y;g_abstol = 1e-14)
-		
-		img_z = OffsetArray(vec(mean(mean(img_window,dims=2),dims=1)),-2:2)
-	    z_res = gauss_line_fit(img_z;g_abstol = 1e-14)	
+
+    # Find local maxima for beads
+   # beads = findlocalmaxima(img_r)
+   # select = img_r[beads] .> mean(img_r) + 3 * std(img_r)
+   # @show(size(beads[select]), mean(img_r) + 3 * std(img_r))
+    
+    if ow
+        dct = record_points(@sprintf("%s_psf.csv",filename),img_r;overwrite = ow)
+    end
+
+    beads = split.(readlines(@sprintf("%s_psf.csv",filename)),",")
+
+    # Run through all identified local maximum point
+    @showprogress @sprintf("Filtering of Record %s...", filename) for coord in beads#[select]
+        coord = parse.(Int64,coord)
+        checkbounds(Bool, img_r, coord[1] - 10, coord[2] - 10, coord[3] - 10) || continue
+        checkbounds(Bool, img_r, coord[1] + 10, coord[2] + 10, coord[3] + 10) || continue
+        img_window =
+            img_r[coord[1]-10:coord[1]+10, coord[2]-10:coord[2]+10, coord[3]-10:coord[3]+10]
+
+        # Gaussian fitting in three axis
+        img_x = OffsetArray(vec(mean(mean(img_window, dims = 3), dims = 2)), -10:10)
+        x_res = gauss_line_fit(img_x; g_abstol = 1e-14)
+
+        img_y = OffsetArray(vec(mean(mean(img_window, dims = 3), dims = 1)), -10:10)
+        y_res = gauss_line_fit(img_y; g_abstol = 1e-14)
+
+        img_z = OffsetArray(vec(mean(mean(img_window, dims = 2), dims = 1)), -10:10)
+        z_res = gauss_line_fit(img_z; g_abstol = 1e-14)
 
         x_params = Optim.minimizer(x_res)
 		y_params = Optim.minimizer(y_res)		
@@ -48,6 +56,7 @@ function beadstest(img,filename,path)
 		a = x_params[2]
 		b = y_params[2]
         c = z_params[2]
+<<<<<<< HEAD
 		if a > 20 || b > 20 || c > 4 || a <= 0.01 || b <= 0.01|| c <= 0.01
 			continue
 		end
@@ -62,6 +71,11 @@ function beadstest(img,filename,path)
         push!(z_width,c)
 		#push!(peak,(x_params[1]+y_params[1])/2)
         #@show(x_params[2],y_params[2],z_params[2],coord)
+=======
+        #if a > 40 || b > 40 || c > 40 || a <= 0.01 || b <= 0.01 || c <= 0.01
+        #    continue
+        #end
+>>>>>>> 32ccca2 (merge click record and fix CI/CD problem.)
 
         x_ = Int(floor(x_params[2]))
         y_ = Int(floor(y_params[2]))
@@ -75,9 +89,13 @@ function beadstest(img,filename,path)
 	end
     replace!(filtered, NaN=>0)
     filtered .-= minimum(filtered)
+<<<<<<< HEAD
     filtered = normal(filtered)
     img3 = Gray.(convert(Array{N0f16},OffsetArrays.no_offset_view(filtered)))
     img4 = Gray.(convert.(Normed{UInt16,16},img3))
+=======
+    filtered = Gray.(convert(Array{N0f16}, OffsetArrays.no_offset_view(filtered)))
+>>>>>>> 32ccca2 (merge click record and fix CI/CD problem.)
 
     img_save(img4,path,@sprintf("%s-fi.tif",filename))
     #@show(mean(x_width),mean(y_width),mean(z_width))
