@@ -56,26 +56,12 @@ function beadstest(img, filename, path,ow)
 		a = x_params[2]
 		b = y_params[2]
         c = z_params[2]
-<<<<<<< HEAD
-		if a > 20 || b > 20 || c > 4 || a <= 0.01 || b <= 0.01|| c <= 0.01
-			continue
-		end
-        #if b > a
-        #    continue
-        #end
-        #if (x_params[1]+y_params[1]+z_params[1])/3 < mean(img_r) + 3*std(img_r)
+		#if a > 20 || b > 20 || c > 4 || a <= 0.01 || b <= 0.01|| c <= 0.01
 		#	continue
 		#end
 		push!(x_width,a)
 	    push!(y_width,b)
         push!(z_width,c)
-		#push!(peak,(x_params[1]+y_params[1])/2)
-        #@show(x_params[2],y_params[2],z_params[2],coord)
-=======
-        #if a > 40 || b > 40 || c > 40 || a <= 0.01 || b <= 0.01 || c <= 0.01
-        #    continue
-        #end
->>>>>>> 32ccca2 (merge click record and fix CI/CD problem.)
 
         x_ = Int(floor(x_params[2]))
         y_ = Int(floor(y_params[2]))
@@ -89,13 +75,7 @@ function beadstest(img, filename, path,ow)
 	end
     replace!(filtered, NaN=>0)
     filtered .-= minimum(filtered)
-<<<<<<< HEAD
-    filtered = normal(filtered)
-    img3 = Gray.(convert(Array{N0f16},OffsetArrays.no_offset_view(filtered)))
-    img4 = Gray.(convert.(Normed{UInt16,16},img3))
-=======
     filtered = Gray.(convert(Array{N0f16}, OffsetArrays.no_offset_view(filtered)))
->>>>>>> 32ccca2 (merge click record and fix CI/CD problem.)
 
     img_save(img4,path,@sprintf("%s-fi.tif",filename))
     #@show(mean(x_width),mean(y_width),mean(z_width))
