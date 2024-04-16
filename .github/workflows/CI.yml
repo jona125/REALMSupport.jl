@@ -23,6 +23,9 @@ jobs:
           - 'nightly'
         os:
           - ubuntu-latest
+        include:
+          - os: ubuntu-latest
+            prefix: xvfb-run
         arch:
           - x64
     steps:
