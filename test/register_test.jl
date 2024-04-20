@@ -8,7 +8,7 @@ using RegisterMismatch
     C = outer[5:20, 1:16]
 
     mm = CenterIndexedArray(zeros(11, 11, 3))
-    mm_r = zeros(2,3)
+    mm_r = zeros(2, 3)
     mm[:, :, -1] = translate(A, A, (5, 5))
     mm_r[:, 1] .= Tuple(register_translate(A, A, (5, 5)))
     mm[:, :, 0] = translate(A, B, (5, 5))
@@ -31,7 +31,6 @@ using RegisterMismatch
 
     @test minimum(result) < 1e-3
     @test reshape(Optim.minimizer(result), 2, 2) * move ≈ mm_r rtol = 0.5
-
 
     #3d translation test
     outer = reshape(1:9600, 24, 20, 20)
