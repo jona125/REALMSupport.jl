@@ -35,10 +35,10 @@ function translate_optim(
 ) where {T,N}
     # The final dimension of mm is assumed to represent "image number" and is not a continuous variable.
     # Hence we should not interpolate over it.
-    qfc = BSpline(Quadratic(Free(OnCell())))
+    qfc = BSpline(Linear())
     itp_mm = interpolate(mm, (ntuple(i->qfc, N-1)..., NoInterp()))
     f = translationclosure(itp_mm, movement)
-    result = optimize(f, initial_matrix, LBFGS(), Optim.Options(; kwargs...))
+    result = optimize(f, initial_matrix, BFGS(), Optim.Options(; kwargs...))
     Optim.converged(result) || @warn "Optimization failed to converge"
     return result
 end

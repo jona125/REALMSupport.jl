@@ -12,7 +12,7 @@ the mouse over desired point. The points are recorded in `pointfile` as a CSV fi
 
 Press 'q' to quit (the window will close).
 """
-function record_points(pointfile::AbstractString, img; overwrite::Bool=false)
+function record_points(pointfile::AbstractString, img; overwrite::Bool = false)
     dct = imshow(img)
     win = dct["gui"]["window"]
     canvas = dct["gui"]["canvas"]
@@ -23,7 +23,7 @@ function record_points(pointfile::AbstractString, img; overwrite::Bool=false)
     signal_connect(eck, "key-pressed") do controller, keyval, keycode, state
         cmd[] = keyval
     end
-    overwrite && rm(pointfile; force=true)
+    overwrite && rm(pointfile; force = true)
     on(cmd) do c
         if c == 'm'
             xymouse, z = mouse[].position, sd.signals[1][]
@@ -31,7 +31,17 @@ function record_points(pointfile::AbstractString, img; overwrite::Bool=false)
             open(pointfile, "a") do f
                 println(f, "$(xy[1]), $(xy[2]), $z")
             end
-            annotate!(dct, AnnotationPoint(xy[1], xy[2]; z, shape='.', size=4, color=RGB(1,0,0)))
+            annotate!(
+                dct,
+                AnnotationPoint(
+                    xy[1],
+                    xy[2];
+                    z,
+                    shape = '.',
+                    size = 4,
+                    color = RGB(1, 0, 0),
+                ),
+            )
         elseif c == 'q'
             close(win)
         end
