@@ -1,5 +1,5 @@
 using Images, Statistics
-using CoordinateTransformations, Rotations, OffsetArrays
+using CoordinateTransformations, Rotations, OffsetArrays, MappedArrays, Base.PermutedDimsArrays
 
 function normal(img)
     max_num = maximum(img)
@@ -42,10 +42,14 @@ function pipeline2(img; z_set = 1, x_angle = 0.0, y_angle = 0.0, z_angle = 0.0)
         ]
         rot = AffineMap(M * tr, v)
     end
-
     img_r = warp(img, rot)
     img_nor = normal(img_r)
     img_nor = permutedims(img_nor, [2, 3, 1])
     img_nor = img_sub(img_nor)
+
+    #img_r = WarpedView(img, rot)
+    #img_nor = mappedarray(normal, img_r)
+    #img_nor = PermutedDimsArray(img_nor, [2, 3, 1])
+    #img_nor = mappedarray(img_sub, img_nor)
     return img_nor
 end
