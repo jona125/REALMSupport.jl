@@ -1,8 +1,8 @@
-using Observables
-using GtkObservables
-using GtkObservables.Gtk4: GtkEventControllerKey, signal_connect
-using ImageView
-using ImageView: RGB
+#using Observables
+#using GtkObservables
+#using GtkObservables.Gtk4: GtkEventControllerKey, signal_connect
+#using ImageView
+#using ImageView: RGB
 
 """
     record_points(pointfile, img; overwrite=false)
