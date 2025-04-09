@@ -1,3 +1,5 @@
+module REALMSupportImageViewExt
+
 using Observables
 using GtkObservables
 using GtkObservables.Gtk4: GtkEventControllerKey, signal_connect
@@ -12,7 +14,7 @@ the mouse over desired point. The points are recorded in `pointfile` as a CSV fi
 
 Press 'q' to quit (the window will close).
 """
-function record_points(pointfile::AbstractString, img; overwrite::Bool=false)
+function REALMSupport.record_points(pointfile::AbstractString, img; overwrite::Bool=false)
     dct = imshow(img)
     win = dct["gui"]["window"]
     canvas = dct["gui"]["canvas"]
@@ -37,4 +39,6 @@ function record_points(pointfile::AbstractString, img; overwrite::Bool=false)
         end
     end
     return dct
+end
+
 end

@@ -18,6 +18,8 @@ include("translation.jl")
 include("segmentbeads.jl")
 include("s_save_image.jl")
 include("time.jl")
-include("click_gui.jl")
+
+# stubs for extensions
+function record_points end
 
 end
